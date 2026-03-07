@@ -1,0 +1,15 @@
+#!/bin/bash
+
+# commit-msg hook: Reminds you to update CHANGELOG.md when code changes
+# This hook runs after you write a commit message but before the commit is finalized
+
+# Check if code files are being committed without CHANGELOG update
+if git diff --cached --name-only | grep -qE '(claude-clean\.js|package\.json)'; then
+  if ! git diff --cached --name-only | grep -q 'CHANGELOG.md'; then
+    echo ""
+    echo "💡 Reminder: You're changing code but didn't update CHANGELOG.md"
+    echo "   Consider adding an [Unreleased] section if this is a notable change"
+    echo ""
+    # Note: This is just a reminder, not blocking the commit
+  fi
+fi

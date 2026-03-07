@@ -1,0 +1,47 @@
+{
+  "name": "claude-clean",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Claude Code cleaner with modern TUI, dashboard, dry-run, and restore features",
+  "main": "claude-clean.js",
+  "bin": {
+    "claude-clean": "./claude-clean.js"
+  },
+  "scripts": {
+    "start": "node claude-clean.js"
+  },
+  "files": [
+    "claude-clean.js",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
+  ],
+  "dependencies": {
+    "@clack/prompts": "^1.1.0",
+    "chalk": "^5.3.0",
+    "dayjs": "^1.11.10"
+  },
+  "keywords": [
+    "claude",
+    "cleaner",
+    "cli",
+    "tui",
+    "dashboard",
+    "backup",
+    "restore",
+    "claude-code"
+  ],
+  "author": "IAmNotAGelfling",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/IAmNotAGelfling/Claude-Cleaner.git"
+  },
+  "bugs": {
+    "url": "https://github.com/IAmNotAGelfling/Claude-Cleaner/issues"
+  },
+  "homepage": "https://github.com/IAmNotAGelfling/Claude-Cleaner#readme",
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}
