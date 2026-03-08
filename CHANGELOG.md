@@ -2,7 +2,7 @@
 
 All notable changes to Claude Cleaner will be documented in this file.
 
-## [1.0.0] - 2026-03-07
+## [1.0.0] - 2026-03-08
 
 ### Initial Release
 
@@ -36,6 +36,7 @@ A comprehensive Node.js CLI tool for managing Claude Code data with modern TUI, 
 #### Developer Tools
 - **Git Hooks**: `commit-msg` hook to remind about CHANGELOG updates
 - **Developer Docs**: Comprehensive `CLAUDE.md` for future maintenance
+- **Test Suite**: 63 comprehensive tests across 3 test files covering utility functions, config system, and manifest handling
 
 #### System Data Cleaning
 - Cleans 9 types of Claude Code data: history, cache, backups, paste-cache, shell-snapshots, plans, debug, file-history, todos
@@ -50,6 +51,7 @@ A comprehensive Node.js CLI tool for managing Claude Code data with modern TUI, 
 - **Single-File Design**: No build step required
 - **Dependencies**: @clack/prompts ^1.1.0, chalk ^5.3.0, dayjs ^1.11.10
 - **Platform**: Node.js (ESM), cross-platform (Windows/macOS/Linux)
+- **Testing**: 63 tests across 3 test files using Node.js built-in test runner
 - **License**: MIT
 
 ---

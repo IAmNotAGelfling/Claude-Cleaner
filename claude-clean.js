@@ -1657,8 +1657,31 @@ case 'backup-mgmt':    case 'backups':      await backupManagementCommand();    
   }
 }
 
-main().catch((error) => {
-  p.cancel('Something went wrong');
-  console.error(error);
-  process.exit(1);
-});
+// Only run main if this file is executed directly (not imported)
+if (import.meta.url === `file://${process.argv[1]}`) {
+  main().catch((error) => {
+    p.cancel('Something went wrong');
+    console.error(error);
+    process.exit(1);
+  });
+}
+
+// ============================================================================
+
+// ============================================================================
+// EXPORTS FOR TESTING
+// ============================================================================
+export {
+  formatBytes,
+  formatRelativeTime,
+  decodeProjectPath,
+  getTimestamp,
+  detectCompressionTool,
+  loadConfig,
+  saveConfig,
+  loadManifest,
+  appendToManifest,
+  calculateDashboardStats,
+  clearSizeCache,
+  findClaudeDirs
+};

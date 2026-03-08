@@ -14,6 +14,9 @@ Claude Code Cleaner is a single-file Node.js CLI utility for managing Claude Cod
 # Run the tool (no build needed)
 node claude-clean.js
 
+# Run tests
+npm test
+
 # Test specific commands directly
 node claude-clean.js status
 node claude-clean.js dashboard
@@ -172,6 +175,42 @@ node claude-clean.js clean-projects --dry-run --quiet
 **Unix**: Path separators in project names use `-` or `--` depending on depth
 
 The tool uses Node.js `path` module for cross-platform compatibility, but backup names reflect the encoded project path format.
+
+## Testing
+
+### Test Suite
+- **Location**: `tests/` directory with 3 test files
+- **Framework**: Node.js built-in test runner (no external dependencies)
+- **Coverage**: 63 tests covering utility functions, config system, and manifest handling
+- **Run**: `npm test`
+
+### Test Files
+1. **tests/unit.test.js** (20 tests) - Core utility functions
+2. **tests/config-manifest.test.js** (25 tests) - Config and manifest systems
+3. **tests/helpers.test.js** (18 tests) - Extended tests for edge cases and integration
+
+### What's Tested
+- Pure logic functions: formatBytes, decodeProjectPath, getTimestamp, detectCompressionTool, calculateDashboardStats, formatRelativeTime, clearSizeCache
+- Config system: Loading, saving, validation
+- Manifest system: JSONL parsing, corrupted line handling, entry validation
+- Edge cases: Large numbers, missing fields, zero values, concurrent access
+- Integration tests for functions working together
+- Platform-specific behavior (Windows vs Unix paths)
+
+### What's NOT Tested
+- Interactive TUI (too complex to mock)
+- File system operations (deletion, backup creation - too risky)
+- Real `~/.claude/` data interactions
+
+### Testing Philosophy
+This tool relies on **unit tests for logic + safety features for operations**:
+- Unit tests ensure utility functions and data handling work correctly
+- Dry-run mode lets users preview before executing
+- Automatic backups make operations reversible
+- Confirmations prevent accidents
+- Manual testing validates end-to-end workflows
+
+See `tests/README.md` for details.
 
 ## Version Tracking
 

@@ -8,7 +8,8 @@
     "claude-clean": "./claude-clean.js"
   },
   "scripts": {
-    "start": "node claude-clean.js"
+    "start": "node claude-clean.js",
+    "test": "node --test tests/*.test.js"
   },
   "files": [
     "claude-clean.js",
