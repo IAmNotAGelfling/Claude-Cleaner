@@ -37,6 +37,7 @@ A comprehensive Node.js CLI tool for managing Claude Code data with modern TUI, 
 - **Git Hooks**: `commit-msg` hook to remind about CHANGELOG updates
 - **Developer Docs**: Comprehensive `CLAUDE.md` for future maintenance
 - **Test Suite**: 63 comprehensive tests across 3 test files covering utility functions, config system, and manifest handling
+- **GitHub Actions CI**: Automated testing on all PRs and pushes (Node 20/22 × Ubuntu/Windows/macOS)
 
 #### System Data Cleaning
 - Cleans 9 types of Claude Code data: history, cache, backups, paste-cache, shell-snapshots, plans, debug, file-history, todos
@@ -45,7 +46,7 @@ A comprehensive Node.js CLI tool for managing Claude Code data with modern TUI, 
 - Package prepared for npm with `bin` field for CLI command (`claude-clean`)
 - Users can run with `npx claude-clean` when published
 - Includes `repository`, `bugs`, and `homepage` URLs
-- Node.js >=16.0.0 requirement specified
+- Node.js >=20.12.0 requirement specified
 
 #### Technical Details
 - **Single-File Design**: No build step required

@@ -9,7 +9,7 @@
   },
   "scripts": {
     "start": "node claude-clean.js",
-    "test": "node --test tests/*.test.js"
+    "test": "node --test tests/config-manifest.test.js tests/helpers.test.js tests/unit.test.js"
   },
   "files": [
     "claude-clean.js",
@@ -43,6 +43,6 @@
   },
   "homepage": "https://github.com/IAmNotAGelfling/Claude-Cleaner#readme",
   "engines": {
-    "node": ">=16.0.0"
+    "node": ">=20.12.0"
   }
 }

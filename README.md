@@ -1,5 +1,7 @@
 # Claude Code Cleaner v1.0.0
 
+[![Tests](https://github.com/IAmNotAGelfling/Claude-Cleaner/actions/workflows/test.yml/badge.svg)](https://github.com/IAmNotAGelfling/Claude-Cleaner/actions/workflows/test.yml)
+
 **Modern TUI tool for managing Claude Code data with dashboard, dry-run, and restore features.**
 
 ## Quick Start
@@ -61,7 +63,7 @@ node claude-clean.js
 > **Coming Soon:** npm package publication for `npx claude-clean` usage
 
 **Requirements:**
-- Node.js >=16.0.0 (you already have it for Claude Code)
+- Node.js >=20.12.0
 - Optional: 7zip or tar for compression (auto-detects, falls back to copy)
 
 ## Usage
