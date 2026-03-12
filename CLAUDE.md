@@ -14,6 +14,10 @@ Claude Code Cleaner is a single-file Node.js CLI utility for managing Claude Cod
 # Run the tool (no build needed)
 node claude-clean.js
 
+# Windows convenience runners
+claude-clean.cmd status              # Command Prompt
+.\claude-clean.ps1 status            # PowerShell
+
 # Run tests
 npm test
 
@@ -41,6 +45,24 @@ All functionality is in `claude-clean.js`. The file is organized into sections:
 5. **Core Operations** (lines ~402-800) - Discovery, backup, deletion logic
 6. **Interactive Menus** (lines ~802-1100) - TUI with @clack/prompts
 7. **CLI Entry Point** (lines ~1102+) - Argument parsing and routing
+
+### Windows Runner Scripts
+
+Two convenience wrappers for Windows users:
+
+**`claude-clean.cmd`** (Command Prompt):
+- Batch script using `%~dp0` to find script directory
+- Passes all arguments via `%*` to the Node.js script
+- Example: `claude-clean.cmd status --dry-run`
+
+**`claude-clean.ps1`** (PowerShell):
+- PowerShell script with comment-based help
+- Uses `Split-Path` and `Join-Path` for path handling
+- Passes all arguments via `@args` to the Node.js script
+- Example: `.\claude-clean.ps1 status --dry-run`
+- View help: `Get-Help .\claude-clean.ps1`
+
+Both scripts automatically locate `claude-clean.js` in the same directory and invoke it with Node.js. Users can add the tool directory to PATH to use `claude-clean.cmd` from anywhere.
 
 ### Data Persistence
 
@@ -118,6 +140,31 @@ Before restoring a backup, the tool checks if the target exists:
 ### Session-Env Handling
 When deleting a project directory (e.g., `C--Git--MyProject`), the tool also finds and deletes related `session-env` directories that share the same base name pattern.
 
+### Manifest Cleaning
+The `cleanOrphanedManifestEntries()` function (line ~580) removes dashboard entries where backups no longer exist:
+```javascript
+// Process:
+// 1. Load all manifest entries
+// 2. Get list of existing backup filenames
+// 3. Filter entries: keep only those with at least one existing backup
+// 4. Rewrite manifest.jsonl with valid entries only
+
+// Accessible via: Backup Management → "📊 Clean dashboard history"
+```
+
+This ensures dashboard statistics remain accurate when users manually delete backups or when automatic backup pruning removes old files.
+
+### Exit Confirmation Handling
+When user presses ESC in the main menu:
+```javascript
+// Show confirmation dialog
+// If confirmed (Yes) → exit application
+// If cancelled (ESC) or declined (No) → continue loop back to menu
+// Loop starts with console.clear() to refresh display
+```
+
+The `continue` statement properly returns to the top of the `while(true)` loop, clearing the screen and redisplaying the menu.
+
 ## Making Changes
 
 ### Git Hooks for CHANGELOG
@@ -129,7 +176,7 @@ A `commit-msg` hook reminds you to update `CHANGELOG.md` when modifying code fil
 cp hooks/commit-msg .git/hooks/commit-msg && chmod +x .git/hooks/commit-msg
 ```
 
-**What It Does**: When you commit changes to `claude-clean.js` or `package.json` without updating `CHANGELOG.md`, you'll see a reminder (non-blocking).
+**What It Does**: When you commit changes to `claude-clean.js`, `package.json`, or the Windows runner scripts (`claude-clean.cmd`, `claude-clean.ps1`) without updating `CHANGELOG.md`, you'll see a reminder (non-blocking).
 
 **Location**: `hooks/commit-msg` (tracked in git) → copy to `.git/hooks/commit-msg` (local only)
 
@@ -214,13 +261,25 @@ See `tests/README.md` for details.
 
 ## Version Tracking
 
-Current version: 1.0.0 (in package.json)
+Current version: see package.json
 
-When incrementing version:
+**IMPORTANT**: Do NOT increment version numbers until explicitly instructed by the user.
+
+When incrementing version (after being told to):
 1. Update `package.json`
 2. Add entry to `CHANGELOG.md`
 3. Update README.md version references (header, summary section)
 4. Tag git commit: `git tag v1.x.x`
+
+## Git Commit Attribution
+
+When creating git commits, always include:
+
+```
+Co-Authored-By: Claude Code <noreply@anthropic.com>
+```
+
+This should be added to the end of commit messages to properly attribute AI assistance.
 
 ## Dependencies
 

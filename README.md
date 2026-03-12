@@ -1,4 +1,4 @@
-# Claude Code Cleaner v1.0.0
+# Claude Code Cleaner v1.0.2
 
 [![Tests](https://github.com/IAmNotAGelfling/Claude-Cleaner/actions/workflows/test.yml/badge.svg)](https://github.com/IAmNotAGelfling/Claude-Cleaner/actions/workflows/test.yml)
 
@@ -16,6 +16,10 @@ npm install
 
 # Run interactive menu
 node claude-clean.js
+
+# Or use the Windows runners
+claude-clean.cmd          # Command Prompt
+.\claude-clean.ps1        # PowerShell
 
 # View help
 node claude-clean.js help
@@ -59,6 +63,24 @@ npm install
 # Run
 node claude-clean.js
 ```
+
+### Windows Convenience Runners
+
+**Command Prompt (CMD):**
+```cmd
+claude-clean.cmd help
+claude-clean.cmd status
+claude-clean.cmd dashboard
+```
+
+**PowerShell:**
+```powershell
+.\claude-clean.ps1 help
+.\claude-clean.ps1 status
+.\claude-clean.ps1 dashboard
+```
+
+To use from anywhere, add the `Claude-Cleaner` directory to your PATH environment variable.
 
 > **Coming Soon:** npm package publication for `npx claude-clean` usage
 
@@ -123,6 +145,10 @@ node claude-clean.js restore
 # Show help
 node claude-clean.js help
 ```
+
+**Windows Users:** Replace `node claude-clean.js` with:
+- `claude-clean.cmd` (Command Prompt)
+- `.\claude-clean.ps1` (PowerShell)
 
 ### Command-Line Flags
 
@@ -205,6 +231,17 @@ Enables:
 - Dashboard statistics
 - Enriched restore information
 - Cleanup history audit trail
+
+**Cleaning Orphaned Entries:**
+
+If you manually delete backups, the manifest may contain entries for non-existent backups. Use the backup management menu to clean these:
+
+```bash
+node claude-clean.js backups
+# Select "📊 Clean dashboard history"
+```
+
+This removes manifest entries where corresponding backups no longer exist, keeping your dashboard data accurate.
 
 ## Examples
 
@@ -439,7 +476,7 @@ MIT
 
 ## Summary
 
-**Claude Code Cleaner v1.0.0** is a comprehensive, production-ready tool for managing Claude Code data:
+**Claude Code Cleaner v1.0.2** is a comprehensive, production-ready tool for managing Claude Code data:
 
 - **Fast:** 10x performance boost with caching
 - **Safe:** Automatic backups with easy restore
@@ -457,4 +494,8 @@ node claude-clean.js              # Interactive menu
 node claude-clean.js status       # Quick overview
 node claude-clean.js dashboard    # View statistics
 node claude-clean.js help         # Full documentation
+
+# Windows runners
+claude-clean.cmd status           # Command Prompt
+.\claude-clean.ps1 status         # PowerShell
 ```

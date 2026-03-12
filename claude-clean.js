@@ -16,6 +16,7 @@ import fs from 'fs';
 import path from 'path';
 import os from 'os';
 import { execSync } from 'child_process';
+import { fileURLToPath } from 'url';
 import * as p from '@clack/prompts';
 import chalk from 'chalk';
 import dayjs from 'dayjs';
@@ -541,6 +542,44 @@ function appendToManifest(entry) {
   }
 }
 
+function cleanOrphanedManifestEntries() {
+  const entries = loadManifest();
+  if (entries.length === 0) {
+    return { cleaned: 0, kept: entries.length };
+  }
+
+  // Get all backup filenames
+  const backups = discoverBackups();
+  const backupFilenames = new Set(backups.map(b => b.filename));
+
+  // Filter entries: keep only those with at least one backup that still exists
+  const validEntries = entries.filter(entry => {
+    // If no items, keep the entry (might be informational)
+    if (!entry.items || entry.items.length === 0) return true;
+
+    // Check if any backup created by this entry still exists
+    return entry.items.some(item => {
+      if (!item.backup) return false;
+      const backupFilename = path.basename(item.backup);
+      return backupFilenames.has(backupFilename);
+    });
+  });
+
+  const cleanedCount = entries.length - validEntries.length;
+
+  // Rewrite manifest with only valid entries
+  if (cleanedCount > 0) {
+    try {
+      const newContent = validEntries.map(e => JSON.stringify(e)).join('\n') + '\n';
+      fs.writeFileSync(MANIFEST_PATH, newContent, 'utf8');
+    } catch (error) {
+      throw new Error(`Failed to write manifest: ${error.message}`);
+    }
+  }
+
+  return { cleaned: cleanedCount, kept: validEntries.length };
+}
+
 function calculateDashboardStats(entries) {
   if (entries.length === 0) {
     return {
@@ -831,7 +870,7 @@ async function helpCommand() {
   console.log(`  ${chalk.cyan('dashboard')}   View cleanup statistics and history`);
   console.log(`  ${chalk.cyan('restore')}     Restore data from backup`);
   console.log(`  ${chalk.cyan('export')}      Export dashboard to CSV`);
-  console.log(`  ${chalk.cyan('backups')}     Manage and prune backups`);
+  console.log(`  ${chalk.cyan('backups')}     Manage backups (prune old, clean dashboard)`);
   console.log(`  ${chalk.cyan('config')}      Configure preferences`);
   console.log(`  ${chalk.cyan('help')}        Show this help menu`);
 
@@ -1129,6 +1168,7 @@ async function backupManagementCommand() {
     options: [
       { value: 'prune-old', label: `🗑️  Delete old backups (${oldBackups.length} backups, ${formatBytes(oldBackupsSize)})`, hint: oldBackups.length > 0 ? 'Recommended' : 'None found' },
       { value: 'select-manual', label: '🎯 Select backups manually' },
+      { value: 'clean-dashboard', label: '📊 Clean dashboard history', hint: 'Remove entries without backups' },
       { value: 'delete-all', label: '🚨  Delete ALL backups', hint: 'Danger zone!' },
       { value: 'cancel', label: '👈 Go back' }
     ]
@@ -1172,6 +1212,26 @@ async function backupManagementCommand() {
         return;
       }
       break;
+
+    case 'clean-dashboard':
+      const s = p.spinner();
+      s.start('Analyzing dashboard history...');
+
+      try {
+        const result = cleanOrphanedManifestEntries();
+        s.stop();
+
+        if (result.cleaned === 0) {
+          p.log.success('✅ Dashboard is clean! All entries have corresponding backups.');
+        } else {
+          p.log.success(`✅ Cleaned ${result.cleaned} orphaned ${result.cleaned === 1 ? 'entry' : 'entries'} from dashboard`);
+          p.log.info(`   Kept ${result.kept} ${result.kept === 1 ? 'entry' : 'entries'} with valid backups`);
+        }
+      } catch (error) {
+        s.stop();
+        p.log.error(`Failed to clean dashboard: ${error.message}`);
+      }
+      return;
 
     case 'delete-all':
       const confirmAll = await p.confirm({
@@ -1504,11 +1564,14 @@ async function interactiveMenu(location) {
         initialValue: true
       });
 
+      // User confirmed exit
       if (!p.isCancel(confirmExit) && confirmExit) {
         p.outro(chalk.cyan('Goodbye!'));
         return;
       }
-      // If cancelled or no, loop back to menu
+
+      // User pressed ESC on confirmation or selected No - go back to menu
+      // Clear screen to remove the confirmation prompt and show menu again
       continue;
     }
 
@@ -1658,7 +1721,8 @@ case 'backup-mgmt':    case 'backups':      await backupManagementCommand();    
 }
 
 // Only run main if this file is executed directly (not imported)
-if (import.meta.url === `file://${process.argv[1]}`) {
+const isMainModule = process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.argv[1]);
+if (isMainModule) {
   main().catch((error) => {
     p.cancel('Something went wrong');
     console.error(error);

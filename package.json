@@ -1,6 +1,6 @@
 {
   "name": "claude-clean",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "type": "module",
   "description": "Claude Code cleaner with modern TUI, dashboard, dry-run, and restore features",
   "main": "claude-clean.js",
@@ -13,6 +13,8 @@
   },
   "files": [
     "claude-clean.js",
+    "claude-clean.cmd",
+    "claude-clean.ps1",
     "README.md",
     "LICENSE",
     "CHANGELOG.md"

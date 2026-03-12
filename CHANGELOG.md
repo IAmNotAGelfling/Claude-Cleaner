@@ -2,6 +2,33 @@
 
 All notable changes to Claude Cleaner will be documented in this file.
 
+## [1.0.2] - 2026-03-12
+
+### Added
+- **Clean Dashboard History**: New option in backup management to remove orphaned manifest entries
+  - Removes dashboard entries where corresponding backups no longer exist
+  - Accessible via "📊 Clean dashboard history" in backup management menu
+  - Keeps dashboard data synchronized with actual backups
+
+### Fixed
+- **Exit Confirmation Loop**: Fixed issue where pressing ESC or No on exit confirmation would freeze the menu
+  - Menu now properly redisplays after cancelling exit confirmation
+  - Improved comment clarity for exit handling logic
+
+## [1.0.1] - 2026-03-12
+
+### Added
+- **Windows Runner Scripts**: `claude-clean.cmd` and `claude-clean.ps1` for convenient execution
+  - CMD script for Command Prompt users
+  - PowerShell script with full help documentation
+  - Both scripts pass all arguments through to the Node.js script
+
+### Fixed
+- **Entry Point Check**: Fixed ESM module detection on Windows
+  - Previous implementation compared `import.meta.url` with `process.argv[1]` incorrectly
+  - Now uses `fileURLToPath()` and `path.resolve()` for proper cross-platform path comparison
+  - Fixes issue where script would not run when executed directly
+
 ## [1.0.0] - 2026-03-08
 
 ### Initial Release
@@ -57,4 +84,6 @@ A comprehensive Node.js CLI tool for managing Claude Code data with modern TUI, 
 
 ---
 
+[1.0.2]: https://github.com/IAmNotAGelfling/Claude-Cleaner/releases/tag/v1.0.2
+[1.0.1]: https://github.com/IAmNotAGelfling/Claude-Cleaner/releases/tag/v1.0.1
 [1.0.0]: https://github.com/IAmNotAGelfling/Claude-Cleaner/releases/tag/v1.0.0
